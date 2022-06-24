@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Random;
@@ -8,15 +9,15 @@ public class Main {
     static BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));
     static String nameRegex = "\\p{Alpha}+", guessRegex = "\\d{1,2}", playerName;
     static Pattern namePattern = Pattern.compile(nameRegex),
-                    guessPattern = Pattern.compile(guessRegex);
+            guessPattern = Pattern.compile(guessRegex);
     static Matcher matcher;
     static Random randomizer = new Random();
     static byte tries, randomNumber;
     static boolean gameFinish = false;
     
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         matcher = getName();
-    
+        
         playerName = matcher.group();   toTitleCase();
         
         while (!gameFinish) {
@@ -31,7 +32,7 @@ public class Main {
                 System.out.println("Take a guess...");
                 matcher = getGuess();
                 if (!matcher.find()) {
-                    System.out.println("Sorry, only 1-2 numbers are allowed!!!  >.<'\n");
+                    System.out.println("Sorry, only numbers are allowed!!!  >.<'\n");
                 }
                 else {
                     if (evaluateGuess()) { break; }
@@ -40,23 +41,40 @@ public class Main {
             
             results();
         }
+        try {
+            buffer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     
-    static Matcher getName() throws Exception {
+    static Matcher getName() {
         System.out.print("Hello! What is your name? ");
-        matcher = namePattern.matcher(buffer.readLine().strip());
+        try {
+            matcher = namePattern.matcher(buffer.readLine().strip());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         while (!matcher.find()){
             System.out.println("""
                 Sorry, only letters of the alphabet are allowed!!!  >.<'
                 """);
             System.out.print("Hello! What is your name? ");
-            matcher = namePattern.matcher(buffer.readLine().strip());
+            try {
+                matcher = namePattern.matcher(buffer.readLine().strip());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         return matcher;
     }
     
-    static Matcher getGuess() throws Exception {
-       return guessPattern.matcher(buffer.readLine().strip());
+    static Matcher getGuess() {
+        try {
+            return guessPattern.matcher(buffer.readLine().strip());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     
     static boolean evaluateGuess() {
@@ -74,11 +92,12 @@ public class Main {
         else return true;
     }
     
-    static void results() throws Exception {
+    static void results() {
+        String guessText = tries == 1 ? "guess" : "guesses";
         if (tries <= 6) {
             System.out.printf("""
-                Good job, %s! You guessed my number in %s guesses!  =D%n
-                """, playerName, tries);
+                Good job, %s! You guessed my number in %s %s!  =D%n
+                """, playerName, tries, guessText);
         }
         else {
             System.out.printf("""
@@ -91,7 +110,13 @@ public class Main {
         
         while (!thisCheck) {
             System.out.print("Would you like to play again? (Y or N) ");
-            String input = buffer.readLine().toLowerCase();  System.out.println();
+            String input;
+            try {
+                input = buffer.readLine().toLowerCase();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println();
             switch (input) {
                 case "y" -> thisCheck = true;
                 case "n" -> {
@@ -108,6 +133,6 @@ public class Main {
     
     static void toTitleCase() {
         playerName = playerName.substring(0, 1).toUpperCase() +
-                        playerName.substring(1).toLowerCase();
+                playerName.substring(1).toLowerCase();
     }
 }
