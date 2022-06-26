@@ -42,8 +42,7 @@ public class Main {
                 }
                 setDoneTrue();  closeScanner();
             } catch (Exception e) {
-                System.out.format("%nException Caught: " +
-                        "Only 1 and 2 are valid! TRY AGAIN!!!  >_<'%n%n");
+                System.out.format("%nOnly 1 and 2 are valid! TRY AGAIN!!!  >_<'%n%n");
             }
         }
         return userInput;

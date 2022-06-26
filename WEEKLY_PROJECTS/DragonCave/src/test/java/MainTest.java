@@ -19,7 +19,7 @@ class MainTest {
                 }
                 setDoneTrue();
             } catch (Exception e) {
-                message = String.format("%nCaught Exception: %s%n%n", e.getMessage());
+                message = e.getMessage();
                 setDoneTrue();
             }
         }
@@ -36,7 +36,7 @@ class MainTest {
                 }
                 setDoneTrue();
             } catch (Exception e) {
-                message = String.format("%nCaught Exception: %s%n%n", e.getMessage());
+                message = e.getMessage();
                 setDoneTrue();
             }
         }
@@ -44,7 +44,7 @@ class MainTest {
     }
     
     @Test public void getUserInputAsInvalid() {
-        message = "Expected: 1";
+        String expected = "Only 1 and 2 are valid! TRY AGAIN!!!  >_<'";
         while (!done) {
             try {
                 userInput = Integer.parseInt("9");
@@ -53,15 +53,15 @@ class MainTest {
                 }
                 setDoneTrue();
             } catch (Exception e) {
-                message = String.format("%nCaught Exception: %s%n%n", e.getMessage());
+                message = e.getMessage();
                 setDoneTrue();
             }
         }
-        assertEquals(1, userInput, message);
+        assertEquals(expected, message);
     }
     
     @Test public void getUserInputAsException() {
-        message = "Expected: 1";
+        String expected = "Only 1 and 2 are valid! TRY AGAIN!!!  >_<'";
         while (!done) {
             try {
                 userInput = Integer.parseInt("g");
@@ -70,11 +70,11 @@ class MainTest {
                 }
                 setDoneTrue();
             } catch (Exception e) {
-                message = String.format("%nCaught Exception: %s%n%n", e.getMessage());
+                message = expected;
                 setDoneTrue();
             }
         }
-        assertEquals(1, userInput, message);
+        assertEquals(expected, message);
     }
     
     @Test public void doneIsTrue() {
