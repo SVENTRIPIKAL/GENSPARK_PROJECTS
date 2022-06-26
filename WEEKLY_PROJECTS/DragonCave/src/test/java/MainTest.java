@@ -7,7 +7,6 @@ class MainTest {
     private String message;
     
     public void setDoneTrue() { done = true; }
-    public void setDoneFalse() { done = false; }
     
     @Test public void getUserInputAsOne() {
         message = "Expected: 1";
@@ -80,10 +79,5 @@ class MainTest {
     @Test public void doneIsTrue() {
         setDoneTrue();
         assertTrue(done, "Expected: true");
-    }
-    
-    @Test public void doneIsFalse() {
-        setDoneFalse();
-        assertFalse(done, "Expected: false");
     }
 }
