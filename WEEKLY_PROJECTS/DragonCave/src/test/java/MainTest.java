@@ -6,7 +6,7 @@ class MainTest {
     private boolean done = false;
     private String message;
     
-    public void setDoneTrue() { done = true; }
+    private void setDoneTrue() { done = true; }
     
     @Test public void getUserInputAsOne() {
         message = "Expected: 1";
