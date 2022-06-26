@@ -33,7 +33,6 @@ public class Main {
     }
     
     private static int getUserInput() {
-        String message = "Only 1 and 2 are valid! TRY AGAIN!!!  >_<'";
         while (!done) {
             System.out.print("Which cave will you go into? (1 or 2) ");
             try {
@@ -43,7 +42,8 @@ public class Main {
                 }
                 setDoneTrue();  closeScanner();
             } catch (Exception e) {
-                System.out.format("%nCaught Exception: %s%n%n", message);
+                System.out.format("%nException Caught: " +
+                        "Only 1 and 2 are valid! TRY AGAIN!!!  >_<'%n%n");
             }
         }
         return userInput;
