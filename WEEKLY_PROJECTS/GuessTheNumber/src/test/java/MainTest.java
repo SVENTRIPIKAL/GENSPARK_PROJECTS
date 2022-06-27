@@ -1,20 +1,12 @@
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import org.junit.jupiter.api.DisplayName;
 import java.util.Random;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MainTest {
-    private static final BufferedReader buffer = new BufferedReader(
-                                        new InputStreamReader(System.in));
     private static final String nameRegex = "(?<name>\\p{Alpha}+)(\\s|\\b)";
     private static final Pattern namePattern = Pattern.compile(nameRegex);
     private static final String guessRegex = "\\d{1,2}";
