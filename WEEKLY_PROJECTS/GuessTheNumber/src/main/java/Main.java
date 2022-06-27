@@ -1,24 +1,28 @@
-import java.io.IOException;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 public class Main {
-    static BufferedReader buffer = new BufferedReader(new InputStreamReader(System.in));
-    static String nameRegex = "\\p{Alpha}+", guessRegex = "\\d{1,2}", playerName;
-    static Pattern namePattern = Pattern.compile(nameRegex),
-            guessPattern = Pattern.compile(guessRegex);
-    static Matcher matcher;
-    static Random randomizer = new Random();
-    static byte tries, randomNumber;
-    static boolean gameFinish = false;
+    private static final BufferedReader buffer = new BufferedReader(
+                                        new InputStreamReader(System.in));
+    private static final String nameRegex = "(?<name>\\p{Alpha}+)(\\s|\\b)";
+    private static final Pattern namePattern = Pattern.compile(nameRegex);
+    private static final String guessRegex = "\\d{1,2}";
+    private static final Pattern guessPattern = Pattern.compile(guessRegex);
+    private static final Random randomizer = new Random();
+    private static Matcher matcher;
+    private static String playerName;
+    private static byte tries, randomNumber;
+    private static boolean gameFinish = false, done = false;
+    private static void setDoneStatus(boolean status) { done = status; }
+    private static void setGameFinishTrue() { gameFinish = true; }
     
     public static void main(String[] args) {
-        matcher = getName();
         
-        playerName = matcher.group();   toTitleCase();
+        playerName = getNameTitled();
         
         while (!gameFinish) {
             randomNumber = (byte) randomizer.nextInt(1,21);
@@ -32,7 +36,8 @@ public class Main {
                 System.out.println("Take a guess...");
                 matcher = getGuess();
                 if (!matcher.find()) {
-                    System.out.println("Sorry, only numbers are allowed!!!  >.<'\n");
+                    System.out.println("Sorry, only 1 to 2 numbers " +
+                            "are allowed!!!  >.<'\n");
                 }
                 else {
                     if (evaluateGuess()) { break; }
@@ -41,40 +46,43 @@ public class Main {
             
             results();
         }
-        try {
-            buffer.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
     
-    static Matcher getName() {
-        System.out.print("Hello! What is your name? ");
-        try {
-            matcher = namePattern.matcher(buffer.readLine().strip());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        while (!matcher.find()){
-            System.out.println("""
-                Sorry, only letters of the alphabet are allowed!!!  >.<'
-                """);
+    static String getNameTitled() {
+        String name = "";   setDoneStatus(false);
+        while (!done) {
             System.out.print("Hello! What is your name? ");
             try {
-                matcher = namePattern.matcher(buffer.readLine().strip());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                name = buffer.readLine().strip();
+                
+                if (name.matches("[^\\p{Alpha}\\s]+")) { throw new Exception(); }
+    
+                StringBuilder sb = new StringBuilder();
+                matcher = namePattern.matcher(name);
+                
+                while (matcher.find()) {
+                    sb.append(matcher.group().substring(0, 1).toUpperCase())
+                            .append(matcher.group().substring(1)
+                                    .toLowerCase());
+                }   name = sb.toString();   setDoneStatus(true);
+                
+            } catch (Exception e) {
+                System.out.format("%nSorry, only letters " +
+                        "and spaces are allowed!!!  >.<'%n%n");
             }
         }
-        return matcher;
+        return name;
     }
     
+    
     static Matcher getGuess() {
+        String guess = "";
         try {
-            return guessPattern.matcher(buffer.readLine().strip());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            guess = buffer.readLine().strip();
+        } catch (Exception e) {
+            System.out.println("Sorry, only 1 to 2 numbers are allowed!!!  >.<'\n");
         }
+        return guessPattern.matcher(guess);
     }
     
     static boolean evaluateGuess() {
@@ -93,46 +101,40 @@ public class Main {
     }
     
     static void results() {
-        String guessText = tries == 1 ? "guess" : "guesses";
+        String guessText = tries == 1 ? "try" : "tries";
         if (tries <= 6) {
             System.out.printf("""
-                Good job, %s! You guessed my number in %s %s!  =D%n
+                %nGood job, %s! You guessed my number in %s %s!  =D%n
                 """, playerName, tries, guessText);
-        }
-        else {
+        } else {
             System.out.printf("""
-                ANSWER: %s
+                %nANSWER: %s
                 Nice try, %s...Maybe next time, yeah? )=%n
                 """, randomNumber, playerName);
         }
         
-        boolean thisCheck = false;
+        setDoneStatus(false);
         
-        while (!thisCheck) {
-            System.out.print("Would you like to play again? (Y or N) ");
+        while (!done) {
             String input;
+            System.out.print("Would you like to play again? (Y or N) ");
             try {
                 input = buffer.readLine().toLowerCase();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            System.out.println();
-            switch (input) {
-                case "y" -> thisCheck = true;
-                case "n" -> {
-                    System.out.println("""
-                        Thank you for playing! (=
-                        """);   thisCheck = true;  gameFinish = true;
+                switch (input) {
+                    case "y" -> setDoneStatus(true);
+                    case "n" -> {
+                        System.out.format("""
+                        %nThank you for playing! (=%n
+                        """);
+                        setDoneStatus(true);  setGameFinishTrue();  buffer.close();
+                    }
+                    default -> throw new Exception();
                 }
-                default -> System.out.println("""
-                                Only 'Y' and 'N' are allowed!!!  >_<'
-                                """);
+            } catch (Exception e) {
+                System.out.format("""
+                    %nOnly 'Y' and 'N' are allowed!!!  >_<'%n
+                    """);
             }
         }
-    }
-    
-    static void toTitleCase() {
-        playerName = playerName.substring(0, 1).toUpperCase() +
-                playerName.substring(1).toLowerCase();
     }
 }
