@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 public class Main {
     private static final BufferedReader buffer = new BufferedReader(
                                         new InputStreamReader(System.in));
-    private static final String nameRegex = "(?<name>\\p{Alpha}+)(\\s|\\b)";
+    private static final String nameRegex = "\\p{Alpha}+(\\s|\\b)+";
     private static final Pattern namePattern = Pattern.compile(nameRegex);
     private static final String guessRegex = "\\d{1,2}";
     private static final Pattern guessPattern = Pattern.compile(guessRegex);
