@@ -3,7 +3,7 @@ package Hangman;
 import java.util.Scanner;
 
 class Player {
-    private int tries;
+    private byte tries;
     private final Scanner scan;
     
     public Player() {
@@ -52,8 +52,8 @@ class Player {
     }
     
     //RETURNS # OF TRIES
-    int getTries() { return tries; }
+    byte getTries() { return tries; }
     
     //INCREMENTS # OF TRIES
-    void setTries(int tries) { this.tries = tries; }
+    void setTries(byte tries) { this.tries = tries; }
 }

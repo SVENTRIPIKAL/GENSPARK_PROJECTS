@@ -18,7 +18,7 @@ public abstract class Hangman {
             secretQuote = returnRandomQuote();
             correctGuesses = new HashSet<>();
             
-            int winningLetterCount = returnLetterSetCount();
+            byte winningLetterCount = returnLetterSetCount();
             HashSet<String> wrongGuesses = new HashSet<>();
             
             System.out.println(array[getTries(player)]);
@@ -36,10 +36,18 @@ public abstract class Hangman {
                 
                 String guess = getGuess(player);
     
-                if (!secretQuote.toLowerCase().contains(guess)){
+                if (correctGuesses.contains(guess) ||
+                        wrongGuesses.contains(guess.toUpperCase())){
+                    setTries(player);
+                    System.out.printf("""
+                        %nYou've Already Guessed That Letter!%n
+                        """);
+                }
+                else if (!secretQuote.toLowerCase().contains(guess)){
                     setTries(player);
                     wrongGuesses.add(guess.toUpperCase());
-                } else {
+                }
+                else {
                     correctGuesses.add(guess);
                 }
                 
@@ -88,7 +96,7 @@ public abstract class Hangman {
     //RETURNS NUM OF LETTERS IN QUOTE AS HASHSET
     private static byte returnLetterSetCount(){
         HashSet<String> lettersSet = new HashSet<>();
-        for (int i = 0; i < secretQuote.length(); i++){
+        for (byte i = 0; i < secretQuote.length(); i++){
             if (String.valueOf(secretQuote.charAt(i))
                     .matches("\\p{Alpha}")){
                 lettersSet.add(String.valueOf(secretQuote.charAt(i))
@@ -118,12 +126,12 @@ public abstract class Hangman {
     
     //GET PLAYER TRIES
     private static byte getTries(Player player){
-        return (byte) player.getTries();
+        return player.getTries();
     }
     
     //INCREASE PLAYER TRIES
     private static void setTries(Player player){
-        player.setTries(player.getTries() + 1);
+        player.setTries((byte) (player.getTries() + 1));
     }
     
     //GET PLAYER GUESS
