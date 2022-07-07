@@ -58,7 +58,7 @@ public abstract class Hangman {
     
             System.out.printf("""
                 %nYOU %s!
-                ANSWER: %10s%n%n
+                ANSWER:\t "%s"%n%n
                 """, outcome, secretQuote);
             
             playing = getReplay(player);    System.out.printf("%n%n");

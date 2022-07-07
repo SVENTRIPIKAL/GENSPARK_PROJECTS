@@ -17,15 +17,16 @@ class Player {
         while (true){
             try {
                 System.out.print("Guess A Letter: ");
-                guess = scan.nextLine().toLowerCase();
-                if (guess.matches("([^\\p{Alpha}])|(\\p{Alpha}{2,})")||
-                    guess.isBlank()){
+                guess = scan.nextLine().toLowerCase().strip();
+                if (guess.isBlank() || guess.length() != 1 ||
+                        guess.matches("[^\\p{Alpha}]")){
+                    System.out.println();
                     throw new Exception("Only One Letter Allowed...");
                 }
                 break;
             } catch (Exception e) {
                 System.out.printf("""
-                    %n%s%n
+                    %s%n
                     """, e.getMessage());
             }
         }
