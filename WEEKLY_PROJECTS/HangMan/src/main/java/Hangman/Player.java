@@ -18,7 +18,8 @@ class Player {
             try {
                 System.out.print("Guess A Letter: ");
                 guess = scan.nextLine().toLowerCase();
-                if (guess.matches("([^\\p{Alpha}])|(\\p{Alpha}{2,})")){
+                if (guess.matches("([^\\p{Alpha}])|(\\p{Alpha}{2,})")||
+                    guess.isBlank()){
                     throw new Exception("Only One Letter Allowed...");
                 }
                 break;
